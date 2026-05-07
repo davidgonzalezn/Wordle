@@ -52,6 +52,8 @@ public class Partida {
     }
     
     
+    
+    //cambio
     @Override
     public boolean equals(String palabraUsuario) {
     	
