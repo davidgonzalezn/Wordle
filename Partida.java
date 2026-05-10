@@ -104,7 +104,7 @@ public class Partida {
 		}
 	}
 	public boolean intento(String palabraSecreta) {
-		 palabraSecreta = palabraSecreta.toUpperCase();
+		 palabraSecreta = palabraSecreta.toLowerCase();
 	        getUsuarioList(palabraSecreta);
 	        comparadorLetras();
 
