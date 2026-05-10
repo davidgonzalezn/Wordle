@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class Partida {
 
@@ -19,6 +20,8 @@ public class Partida {
 	private String [] arrayPalabras;
 	private String nombreJugador;
 	private String palabraSecreta;
+	private int vidas=6;
+	private int puntuacionFinal;
 
 
 	//COLORES 
@@ -32,9 +35,10 @@ public class Partida {
 	final String BLANCO = "\u001B[37m";
 
 	public Partida(String nombreJugador) {
-
 		this.nombreJugador = nombreJugador;
 	}
+	
+
 
 	public void cargarPalabras () { 
 		try {
@@ -52,15 +56,18 @@ public class Partida {
 	}
 
 	public void hacerSorteo () {
+		sorteo.clear();//esto para que cada vez que hagamos el sorteo en el addAll añada las palabras de nuevo
 		sorteo.addAll(palabras);
 		Collections.shuffle(sorteo);
 	}
 	public void iniciarPartida() {
-
+		hacerSorteo();
 		palabraSecreta = sorteo.get(0);
+		letras.clear();//por si acaso hay algo de la anterior
 		for (int i = 0; i < palabraSecreta.length(); i++) {
 			letras.add(palabraSecreta.charAt(i));
 		}
+		vidas=6;
 
 	}
 
@@ -96,6 +103,44 @@ public class Partida {
 			}
 		}
 	}
+	public boolean intento(String palabraSecreta) {
+		 palabraSecreta = palabraSecreta.toUpperCase();
+	        getUsuarioList(palabraSecreta);
+	        comparadorLetras();
+
+	        if (palabraSecreta.equals(palabraSecreta)) {
+	        		puntuacionFinal += vidas*100;
+	            System.out.println("Adivinada, nueva palabra:");
+	 
+	            iniciarPartida();
+	            return true;
+	        } else {
+	            vidas--;
+	            System.out.println("Vidas restantes: " + vidas);
+	            return false;
+	        }
+	   }
+	public void jugar() {
+
+        Scanner sc = new Scanner(System.in);
+        	cargarPalabras();
+        	iniciarPartida();
+        while (vidas>0) {
+
+            System.out.print("Introduce la palabra ");
+            String intento = sc.nextLine().toUpperCase();
+            //aqui habria que poner por si quiere guardar la partida
+            if (intento.length() != 5) {
+                System.out.println("La palabra debe tener 5 letras.");
+                continue;
+            }
+
+            intento(intento);
+        }
+
+        System.out.println("Has perdido, puntuación final: "+puntuacionFinal);
+        
+    }
 
 	//Compara las listas 
 	@Override
