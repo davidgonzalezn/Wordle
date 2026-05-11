@@ -25,6 +25,7 @@ public class Partida implements Serializable {
 	private String palabraSecreta;
 	private int vidas=6;
 	private int puntuacionFinal;
+	
 
 
 	//COLORES 
@@ -150,6 +151,7 @@ public class Partida implements Serializable {
         if(guardar==1) {
         		System.out.println("Introduce tu nombre: ");
         		String nombre =sc.next();
+        		Puntuacion.registrar(nombre, puntuacionFinal);
         		
         }  
     }
