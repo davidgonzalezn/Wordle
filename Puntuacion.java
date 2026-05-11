@@ -1,6 +1,6 @@
 package practica6;
 
-import java.util.HashMap;
+import java.util.*;
 import java.io.*;
 public class Puntuacion {
 

@@ -9,7 +9,8 @@ public class Wordle {
 	            System.out.println("Menú:");
 	            System.out.println("1. Nuevo juego");
 	            System.out.println("2. Cargar juego");
-	            System.out.println("3. Salir");
+	            System.out.println("3:Ver puntuaciones");
+	            System.out.println("4. Salir");
 	            System.out.print("Elige opción: ");
 
 	            int opcion = sc.nextInt();
@@ -18,15 +19,17 @@ public class Wordle {
 	            switch (opcion) {
 
 	                case 1->{
-	                    System.out.print("Introduce tu nombre: ");
-	                    String nombre = sc.nextLine();
-	                    partida = new Partida(nombre);
+	                 
+	                    partida = new Partida();
 	                    partida.jugar();  
 	                }
 	                case 2 -> {
 	                	//lo de cargar partida guardada
 	                }
 	                case 3 ->{
+	                		Puntuacion.mostrar();
+	                }
+	                case 4 ->{
 	                	 System.out.println("Adios");
 	                	 return;
 	                }
