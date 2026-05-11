@@ -2,15 +2,18 @@ package practica6;
 //prueba
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Scanner;
 
-public class Partida {
+public class Partida implements Serializable {
 
-	private String ruta = "C:\\Palabras5L.txt";
+	private String ruta = "Palabras5L.txt";
 	BufferedReader br = null;
 	private String texto;
 	private HashSet <String> palabras = new HashSet <String>();
@@ -39,7 +42,7 @@ public class Partida {
 	}
 	
 
-
+	//carga nuestro fichero de palabras
 	public void cargarPalabras () { 
 		try {
 			br = new BufferedReader(new FileReader(ruta));
@@ -60,6 +63,7 @@ public class Partida {
 		sorteo.addAll(palabras);
 		Collections.shuffle(sorteo);
 	}
+	//carga una palabra y reinicia las vidas
 	public void iniciarPartida() {
 		hacerSorteo();
 		palabraSecreta = sorteo.get(0);
@@ -103,6 +107,7 @@ public class Partida {
 			}
 		}
 	}
+	//metodo que valida el intento, resta vida o carga nueva palabra
 	public boolean intento(String palabraSecreta) {
 		 palabraSecreta = palabraSecreta.toLowerCase();
 	        getUsuarioList(palabraSecreta);
@@ -120,6 +125,7 @@ public class Partida {
 	            return false;
 	        }
 	   }
+	//metdodo principal para jugar
 	public void jugar() {
 
         Scanner sc = new Scanner(System.in);
@@ -139,8 +145,33 @@ public class Partida {
         }
 
         System.out.println("Has perdido, puntuación final: "+puntuacionFinal);
-        
+        System.out.println("Quieres guardar la puntuacion? 1. SI 2.NO");
+        int guardar=sc.nextInt();
+        if(guardar==1) {
+        		System.out.println("Introduce tu nombre: ");
+        		String nombre =sc.next();
+        		
+        }  
     }
+	//guardar partida
+	public void guardarPartida() {
+		ObjectOutputStream oos =null;
+		try {
+			 oos = new ObjectOutputStream(new FileOutputStream("partidaGuardada.dat"));
+	         oos.writeObject(this);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}finally {
+			if(oos!=null) {
+				try {
+					oos.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	//cargar partida
 
 	//Compara las listas 
 	@Override
