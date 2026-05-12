@@ -1,5 +1,5 @@
 package practica6;
-//prueba
+
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -38,9 +38,7 @@ public class Partida implements Serializable {
 	final String NEGRO = "\u001B[30m";
 	final String BLANCO = "\u001B[37m";
 
-	public Partida(String nombreJugador) {
-		this.nombreJugador = nombreJugador;
-	}
+	
 	
 
 	//carga nuestro fichero de palabras

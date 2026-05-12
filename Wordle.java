@@ -19,7 +19,6 @@ public class Wordle {
 	            switch (opcion) {
 
 	                case 1->{
-	                 
 	                    partida = new Partida();
 	                    partida.jugar();  
 	                }
