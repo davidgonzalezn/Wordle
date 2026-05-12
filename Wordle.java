@@ -23,7 +23,14 @@ public class Wordle {
 	                    partida.jugar();  
 	                }
 	                case 2 -> {
-	                	//lo de cargar partida guardada
+	                	partida = Partida.cargarPartida();
+	                    if (partida != null) {
+	                        System.out.println("Partida cargada.");
+	                        partida.jugar();
+	                    } else {
+	                        System.out.println("No se pudo cargar la partida.");
+	                    }
+	                    
 	                }
 	                case 3 ->{
 	                		Puntuacion.mostrar();

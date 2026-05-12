@@ -2,8 +2,10 @@ package practica6;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -135,13 +137,20 @@ public class Partida implements Serializable {
 	public void jugar() {
 
 		Scanner sc = new Scanner(System.in);
-		cargarPalabras();
-		iniciarPartida();
+			if(palabraSecreta==null) {
+	        cargarPalabras();
+	        iniciarPartida();
+			}
 		while (vidas>0) {
 
-			System.out.print("Introduce la palabra ");
+			System.out.print("Introduce la palabra o ('guardar' para salir) ");
 			String intento = sc.nextLine().toLowerCase();
 			//aqui habria que poner por si quiere guardar la partida
+			if (intento.equals("guardar")) {
+                guardarPartida();
+                System.out.println("Partida guardada. Volviendo al menú.");
+                return;
+            }
 			if (intento.length() != 5) {
 				System.out.println("La palabra debe tener 5 letras.");
 				continue;
@@ -151,6 +160,7 @@ public class Partida implements Serializable {
 		}
 
 		System.out.println("Has perdido, puntuación final: "+puntuacionFinal);
+		System.out.println("La palabra era: " + palabraSecreta);
 		System.out.println("Quieres guardar la puntuacion? 1. SI 2.NO");
 		int guardar=sc.nextInt();
 		if(guardar==1) {
@@ -163,7 +173,7 @@ public class Partida implements Serializable {
 	public void guardarPartida() {
 		ObjectOutputStream oos =null;
 		try {
-			oos = new ObjectOutputStream(new FileOutputStream("partidaGuardada.dat"));
+			oos = new ObjectOutputStream(new FileOutputStream("src\\practica6\\partidaGuardada.dat"));
 			oos.writeObject(this);
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -177,7 +187,26 @@ public class Partida implements Serializable {
 			}
 		}
 	}
-	//cargar partida
+	//cargarPArtida
+	public static Partida cargarPartida() {
+		ObjectInputStream ois =null;
+		try {
+			ois= new ObjectInputStream(new FileInputStream("src\\practica6\\partidaGuardada.dat"));
+			return (Partida)ois.readObject();
+			
+		}catch(IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}finally {
+			if(ois!=null) {
+				try {
+					ois.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
 
 	//Compara las listas 
 	@Override
