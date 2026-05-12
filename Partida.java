@@ -112,9 +112,11 @@ public class Partida implements Serializable {
 			}
 		}
 	}
+	//hola
 	//metodo que valida el intento, resta vida o carga nueva palabra
 	public boolean intento(String intento) {
 		intento = intento.toLowerCase();
+		usuarioList.clear();
 		getUsuarioList(intento);
 		comparadorLetras();
 
