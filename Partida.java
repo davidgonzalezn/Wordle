@@ -13,19 +13,16 @@ import java.util.Scanner;
 
 public class Partida implements Serializable {
 
-	private String ruta = "Palabras5L.txt";
-	BufferedReader br = null;
-	private String texto;
+	private final String RUTA = "src/practica6/Palabras5.txt";
 	private HashSet <String> palabras = new HashSet <String>();
 	private ArrayList <String> sorteo = new ArrayList <String> ();
 	private ArrayList <Character> letras = new ArrayList <Character> ();
 	ArrayList <Character> usuarioList = new ArrayList <Character> ();
 	private String [] arrayPalabras;
-	private String nombreJugador;
 	private String palabraSecreta;
 	private int vidas=6;
 	private int puntuacionFinal;
-	
+
 
 
 	//COLORES 
@@ -38,15 +35,16 @@ public class Partida implements Serializable {
 	final String NEGRO = "\u001B[30m";
 	final String BLANCO = "\u001B[37m";
 
-	
-	
+
+
 
 	//carga nuestro fichero de palabras
 	public void cargarPalabras () { 
+		BufferedReader br = null;
+		String texto;
 		try {
-			br = new BufferedReader(new FileReader(ruta));
-
-			this.texto = br.readLine();
+			br = new BufferedReader(new FileReader(RUTA));
+			texto = br.readLine();
 			arrayPalabras = texto.split(", ");
 
 			for (int i = 0; i < arrayPalabras.length; i++) {
@@ -54,6 +52,14 @@ public class Partida implements Serializable {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally {
+			if(br!=null) {
+				try {
+					br.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -86,11 +92,11 @@ public class Partida implements Serializable {
 
 	//Compara las posiciones + equals
 	public void comparadorLetras () {
-		
+
 		for (int i = 0; i < palabraSecreta.length(); i++) {
 			if (usuarioList.get(i).equals(letras.get(i))) {
 				System.out.print(FONDO_VERDE + NEGRO + usuarioList.get(i) + RESET);
-				
+
 			} else {
 				boolean encontrada = false;
 				for (int j = 0; j < palabraSecreta.length(); j++) {
@@ -107,58 +113,56 @@ public class Partida implements Serializable {
 		}
 	}
 	//metodo que valida el intento, resta vida o carga nueva palabra
-	public boolean intento(String palabraSecreta) {
-		 palabraSecreta = palabraSecreta.toLowerCase();
-	        getUsuarioList(palabraSecreta);
-	        comparadorLetras();
+	public boolean intento(String intento) {
+		intento = intento.toLowerCase();
+		getUsuarioList(intento);
+		comparadorLetras();
 
-	        if (palabraSecreta.equals(palabraSecreta)) {
-	        		puntuacionFinal += vidas*100;
-	            System.out.println("Adivinada, nueva palabra:");
-	 
-	            iniciarPartida();
-	            return true;
-	        } else {
-	            vidas--;
-	            System.out.println("Vidas restantes: " + vidas);
-	            return false;
-	        }
-	   }
+		if (palabraSecreta.equals(intento)) {
+			puntuacionFinal += vidas*100;
+			System.out.println("Adivinada, nueva palabra:");
+			iniciarPartida();
+			return true;
+		} else {
+			vidas--;
+			System.out.println("Vidas restantes: " + vidas);
+			return false;
+		}
+	}
 	//metdodo principal para jugar
 	public void jugar() {
 
-        Scanner sc = new Scanner(System.in);
-        	cargarPalabras();
-        	iniciarPartida();
-        while (vidas>0) {
+		Scanner sc = new Scanner(System.in);
+		cargarPalabras();
+		iniciarPartida();
+		while (vidas>0) {
 
-            System.out.print("Introduce la palabra ");
-            String intento = sc.nextLine().toUpperCase();
-            //aqui habria que poner por si quiere guardar la partida
-            if (intento.length() != 5) {
-                System.out.println("La palabra debe tener 5 letras.");
-                continue;
-            }
+			System.out.print("Introduce la palabra ");
+			String intento = sc.nextLine().toLowerCase();
+			//aqui habria que poner por si quiere guardar la partida
+			if (intento.length() != 5) {
+				System.out.println("La palabra debe tener 5 letras.");
+				continue;
+			}
 
-            intento(intento);
-        }
+			intento(intento);
+		}
 
-        System.out.println("Has perdido, puntuación final: "+puntuacionFinal);
-        System.out.println("Quieres guardar la puntuacion? 1. SI 2.NO");
-        int guardar=sc.nextInt();
-        if(guardar==1) {
-        		System.out.println("Introduce tu nombre: ");
-        		String nombre =sc.next();
-        		Puntuacion.registrar(nombre, puntuacionFinal);
-        		
-        }  
-    }
+		System.out.println("Has perdido, puntuación final: "+puntuacionFinal);
+		System.out.println("Quieres guardar la puntuacion? 1. SI 2.NO");
+		int guardar=sc.nextInt();
+		if(guardar==1) {
+			System.out.println("Introduce tu nombre: ");
+			String nombre =sc.next();
+			Puntuacion.registrar(nombre, puntuacionFinal);	
+		}  
+	}
 	//guardar partida
 	public void guardarPartida() {
 		ObjectOutputStream oos =null;
 		try {
-			 oos = new ObjectOutputStream(new FileOutputStream("partidaGuardada.dat"));
-	         oos.writeObject(this);
+			oos = new ObjectOutputStream(new FileOutputStream("partidaGuardada.dat"));
+			oos.writeObject(this);
 		}catch(IOException e) {
 			e.printStackTrace();
 		}finally {

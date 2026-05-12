@@ -5,67 +5,75 @@ import java.io.*;
 public class Puntuacion {
 
 	private static final String FICHERO = "puntuaciones.csv";
-	
+
 	public static HashMap<String, Integer> leerPuntuacion() {
 
-        HashMap<String, Integer> puntuacion = new HashMap<>();
-        ObjectInputStream ois =null;
-        try {
-        		ois= new ObjectInputStream(new FileInputStream(FICHERO));
-        		puntuacion = (HashMap<String, Integer>) ois.readObject();
-        		
-        }catch(IOException | ClassNotFoundException e) {
-        		e.printStackTrace();
-        }finally {
-        		if(ois!=null) {
-        			try {
-        				ois.close();
-        			}catch(IOException e) {
-        				e.printStackTrace();
-        			}
-        		}
-        }
-        return puntuacion;
+		HashMap<String, Integer> puntuacion = new HashMap<>();
+		BufferedReader br = null;
+		try {
+			br=new BufferedReader(new FileReader(FICHERO));
+			String linea;
+			while ((linea = br.readLine()) != null) {
+
+				String[] partes = linea.split(",");
+
+				if (partes.length == 2) {
+					String nombre = partes[0];
+					int puntos = Integer.parseInt(partes[1]);
+					puntuacion.put(nombre, puntos);
+				}
+			}
+
+		} catch (IOException e) {
+
+		}finally {
+			if(br!=null) {
+				try {
+					br.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return puntuacion;
 	}
+
+
+
 	public static void guardar(HashMap<String, Integer> puntuaciones ) {
-		ObjectOutputStream oos =null;
-	    try {
-	    		oos= new ObjectOutputStream(new FileOutputStream(FICHERO));
-	        oos.writeObject(puntuaciones);
+		BufferedWriter bw = null;
+		 try {
+			 bw=new BufferedWriter(new FileWriter(FICHERO,true));
+	            for (String nombre : puntuaciones.keySet()) {
+	                bw.write(nombre + "," + puntuaciones.get(nombre));
+	                bw.newLine();
+	            }
 
-	    } catch (IOException e) {
-	        System.out.println("Error al guardar puntuaciones.");
-	    }finally {
-	    		if(oos!=null) {
-	    			try {
-	    				oos.close();
-	    			}catch(IOException e) {
-	    				e.printStackTrace();
-	    			}
-	    		}
-	    }
+	        } catch (IOException e) {
+	            System.out.println("Error al guardar puntuaciones.");
+	        }
 	}
-	 public static void registrar(String nombre, int puntuacion) {
+	public static void registrar(String nombre, int puntuacion) {
 
-	        HashMap<String, Integer> puntuaciones = leerPuntuacion();
+		HashMap<String, Integer> puntuaciones = leerPuntuacion();
 
-	        if (!puntuaciones.containsKey(nombre) || puntuacion > puntuaciones.get(nombre)) {
-	            puntuaciones.put(nombre, puntuacion);
-	            guardar(puntuaciones);
-	            System.out.println("Puntuación registrada.");
-	        } else {
-	            System.out.println("Ya tenías una puntuación mayor registrada.");
-	        }
-	    }
-	 public static void mostrar() {
+		if (!puntuaciones.containsKey(nombre) || puntuacion > puntuaciones.get(nombre)) {
+			puntuaciones.put(nombre, puntuacion);
+			guardar(puntuaciones);
+			System.out.println("Puntuación registrada.");
+		} else {
+			System.out.println("Ya tenías una puntuación mayor registrada.");
+		}
+	}
+	public static void mostrar() {
 
-	        HashMap<String, Integer> puntuaciones = leerPuntuacion();
+		HashMap<String, Integer> puntuaciones = leerPuntuacion();
 
-	        if (puntuaciones.isEmpty()) {
-	            System.out.println("No hay puntuaciones registradas.");
-	            return;
-	        }
-	        System.out.println("Puntuaciones:");
-	        System.out.println(puntuaciones);
-	    }
+		if (puntuaciones.isEmpty()) {
+			System.out.println("No hay puntuaciones registradas.");
+			return;
+		}
+		System.out.println("Puntuaciones:");
+		System.out.println(puntuaciones);
+	}
 }
