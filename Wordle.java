@@ -2,7 +2,7 @@ package practica6;
 import java.util.Scanner;
 public class Wordle {
 	 public static void main(String[] args) {
-		 //hola
+		 
 		 Scanner sc = new Scanner(System.in);
 		 Partida partida=null;
 		 while (true) {

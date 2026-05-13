@@ -13,20 +13,24 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import practica6.Letra.ESTADO;
+
 public class Partida implements Serializable {
 
 	private final String RUTA = "src/practica6/Palabras5.txt";
 	private HashSet <String> palabras = new HashSet <String>();
 	private ArrayList <String> sorteo = new ArrayList <String> ();
-	private ArrayList <Character> letras = new ArrayList <Character> ();
-	ArrayList <Character> usuarioList = new ArrayList <Character> ();
+	//private ArrayList <Character> letras = new ArrayList <Character> ();
+	//ArrayList <Character> usuarioList = new ArrayList <Character> ();
 	private String [] arrayPalabras;
 	private String palabraSecreta;
 	private int vidas=6;
 	private int puntuacionFinal;
-
-
-
+	
+	private ArrayList <Letra> secreta = new ArrayList <> ();
+	private ArrayList <Letra> palabraUsuario = new ArrayList <> ();
+			
+			
 	//COLORES 
 	final String RESET = "\u001B[0m";
 
@@ -74,9 +78,10 @@ public class Partida implements Serializable {
 	public void iniciarPartida() {
 		hacerSorteo();
 		palabraSecreta = sorteo.get(0);
-		letras.clear();//por si acaso hay algo de la anterior
+		secreta.clear();//por si acaso hay algo de la anterior
 		for (int i = 0; i < palabraSecreta.length(); i++) {
-			letras.add(palabraSecreta.charAt(i));
+			char c = palabraSecreta.charAt(i);
+			secreta.add(new Letra (c));
 		}
 		vidas=6;
 
@@ -84,43 +89,73 @@ public class Partida implements Serializable {
 
 	//Transformar palabra usuario a lista <Character> 
 
-	public ArrayList <Character> getUsuarioList (String palabraUsuario) {
-
-		for (int i = 0; i < palabraUsuario.length(); i++) {
-			usuarioList.add(palabraUsuario.charAt(i));
+	public ArrayList <Letra> getPalabraUsuario (String userWord) {
+		for (int i = 0; i < userWord.length(); i++) {
+			char c = userWord.charAt(i);
+			palabraUsuario.add(new Letra(c));
 		}
-		return usuarioList;
+		return palabraUsuario;
 	}
-
-	//Compara las posiciones + equals
-	public void comparadorLetras () {
-
-		for (int i = 0; i < palabraSecreta.length(); i++) {
-			if (usuarioList.get(i).equals(letras.get(i))) {
-				System.out.print(FONDO_VERDE + NEGRO + usuarioList.get(i) + RESET);
-
-			} else {
-				boolean encontrada = false;
-				for (int j = 0; j < palabraSecreta.length(); j++) {
-					if (usuarioList.get(i).equals(letras.get(j))) {
-						encontrada = true;
-						break;
-					}
-				}
-				if (encontrada) {
-					System.out.print(FONDO_AMARILLO + NEGRO + usuarioList.get(i) + RESET);
-				} else 
-					System.out.print(FONDO_NEGRO + BLANCO + usuarioList.get(i) + RESET);
+	
+	public void comprobarVerdes() {
+		for (int i = 0; i<palabraSecreta.length(); i++) {
+			if (palabraUsuario.get(i).getLetra() == secreta.get(i).getLetra()) {
+				palabraUsuario.get(i).estado = ESTADO.VERDE;
+				secreta.get(i).estado = ESTADO.VERDE;
 			}
 		}
 	}
-	//hola
+	
+	public void comprobarAmarrillas () {
+		for (int i = 0; i < palabraSecreta.length(); i++) {
+			Letra letraUser = palabraUsuario.get(i);
+			if (letraUser.getEstado() != ESTADO.VERDE) {
+				for(int j = 0; j < palabraSecreta.length(); j++) {
+					Letra letraSecreta = secreta.get(j);
+					if (letraSecreta.getEstado() == ESTADO.NEGRO) {
+						if(letraUser.getLetra() == letraSecreta.getLetra()) {
+							letraUser.estado = ESTADO.AMARILLO;
+							letraSecreta.estado = ESTADO.AMARILLO;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public void imprimirPalabraUsuario () {
+		for(int i = 0;i < palabraSecreta.length(); i++ ) {
+			Letra letraUser = palabraUsuario.get(i);
+			switch (letraUser.estado) {
+				case VERDE :
+					System.out.print(FONDO_VERDE + NEGRO + palabraUsuario.get(i).getLetra() + RESET);
+					break;
+				
+				case AMARILLO:
+					System.out.print(FONDO_AMARILLO + NEGRO + palabraUsuario.get(i).getLetra() + RESET);
+					break;
+					
+				case NEGRO:
+					System.out.print(FONDO_NEGRO + BLANCO + palabraUsuario.get(i).getLetra() + RESET);
+					break;
+			}
+		}
+	}
+	
+	
+	public void compararLetras () {
+		comprobarVerdes();
+		comprobarAmarrillas();
+		imprimirPalabraUsuario();
+	}
+	
 	//metodo que valida el intento, resta vida o carga nueva palabra
 	public boolean intento(String intento) {
 		intento = intento.toLowerCase();
-		usuarioList.clear();
-		getUsuarioList(intento);
-		comparadorLetras();
+		palabraUsuario.clear();
+		getPalabraUsuario(intento);
+		compararLetras();
 
 		if (palabraSecreta.equals(intento)) {
 			puntuacionFinal += vidas*100;
@@ -222,7 +257,7 @@ public class Partida implements Serializable {
 
 		Partida otra = (Partida) obj;
 
-		return letras.equals(otra.letras) && usuarioList.equals(otra.usuarioList);
+		return secreta.equals(otra.secreta) && palabraUsuario.equals(otra.palabraUsuario);
 	}
 
 }
