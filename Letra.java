@@ -1,6 +1,8 @@
 package practica6;
 
-public class Letra {
+import java.io.Serializable;
+
+public class Letra implements Serializable{
 	enum ESTADO { 
 		VERDE, AMARILLO, NEGRO
 	};
