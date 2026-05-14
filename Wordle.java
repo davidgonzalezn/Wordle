@@ -12,6 +12,7 @@ public class Wordle {
 	            System.out.println("2. Cargar juego");
 	            System.out.println("3:Ver puntuaciones");
 	            System.out.println("4. Salir");
+	            System.out.println();
 	            System.out.print("Elige opción: ");
 
 	            int opcion = sc.nextInt();

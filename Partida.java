@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import practica6.Letra.ESTADO;
@@ -20,8 +21,7 @@ public class Partida implements Serializable {
 	private final String RUTA = "src/practica6/Palabras5.txt";
 	private HashSet <String> palabras = new HashSet <String>();
 	private ArrayList <String> sorteo = new ArrayList <String> ();
-	//private ArrayList <Character> letras = new ArrayList <Character> ();
-	//ArrayList <Character> usuarioList = new ArrayList <Character> ();
+	
 	private String [] arrayPalabras;
 	private String palabraSecreta;
 	private int vidas=6;
@@ -159,12 +159,14 @@ public class Partida implements Serializable {
 
 		if (palabraSecreta.equals(intento)) {
 			puntuacionFinal += vidas*100;
-			System.out.println("Adivinada, nueva palabra:");
+			System.out.println("\nAdivinada, nueva palabra:");
 			iniciarPartida();
 			return true;
 		} else {
 			vidas--;
-			System.out.println("Vidas restantes: " + vidas);
+			
+			System.out.println("\nVidas restantes: " + vidas);
+			System.out.println();
 			return false;
 		}
 	}
@@ -196,13 +198,32 @@ public class Partida implements Serializable {
 
 		System.out.println("Has perdido, puntuación final: "+puntuacionFinal);
 		System.out.println("La palabra era: " + palabraSecreta);
+		do {
 		System.out.println("Quieres guardar la puntuacion? 1. SI 2.NO");
+		try {
 		int guardar=sc.nextInt();
+		
 		if(guardar==1) {
-			System.out.println("Introduce tu nombre: ");
-			String nombre =sc.next();
-			Puntuacion.registrar(nombre, puntuacionFinal);	
-		}  
+		System.out.println("Introduce tu nombre: ");
+		String nombre =sc.next();
+		Puntuacion.registrar(nombre, puntuacionFinal);
+		break;
+		}else if(guardar==2){
+			break;
+		}else {
+			System.out.println("Opción no válida");
+		}
+		}catch(InputMismatchException e) {
+			System.out.println("Caracter introducido inválido");
+			sc.next();
+		}
+		}while(true);
+			
+			
+				
+			
+			
+		
 	}
 	//guardar partida
 	public void guardarPartida() {
