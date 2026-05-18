@@ -6,10 +6,10 @@ public class Letra implements Serializable{
 	enum ESTADO { 
 		VERDE, AMARILLO, NEGRO
 	};
-	
+
 	char letra;
 	ESTADO estado = ESTADO.NEGRO;
-	
+
 	public Letra (char letra) {
 		this.letra = letra;
 	}

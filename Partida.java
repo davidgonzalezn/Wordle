@@ -21,28 +21,21 @@ public class Partida implements Serializable {
 	private final String RUTA = "src/practica6/Palabras5.txt";
 	private HashSet <String> palabras = new HashSet <String>();
 	private ArrayList <String> sorteo = new ArrayList <String> ();
-	
 	private String [] arrayPalabras;
 	private String palabraSecreta;
 	private int vidas=6;
 	private int puntuacionFinal;
-	
 	private ArrayList <Letra> secreta = new ArrayList <> ();
 	private ArrayList <Letra> palabraUsuario = new ArrayList <> ();
-			
-			
+
+
 	//COLORES 
 	final String RESET = "\u001B[0m";
-
 	final String FONDO_VERDE = "\u001B[42m";
 	final String FONDO_AMARILLO = "\u001B[43m";
 	final String FONDO_NEGRO = "\u001B[40m";
-
 	final String NEGRO = "\u001B[30m";
 	final String BLANCO = "\u001B[37m";
-
-
-
 
 	//carga nuestro fichero de palabras
 	public void cargarPalabras () { 
@@ -84,11 +77,9 @@ public class Partida implements Serializable {
 			secreta.add(new Letra (c));
 		}
 		vidas=6;
-
 	}
 
 	//Transformar palabra usuario a lista <Character> 
-
 	public ArrayList <Letra> getPalabraUsuario (String userWord) {
 		for (int i = 0; i < userWord.length(); i++) {
 			char c = userWord.charAt(i);
@@ -96,7 +87,7 @@ public class Partida implements Serializable {
 		}
 		return palabraUsuario;
 	}
-	
+
 	public void comprobarVerdes() {
 		for (int i = 0; i<palabraSecreta.length(); i++) {
 			if (palabraUsuario.get(i).getLetra() == secreta.get(i).getLetra()) {
@@ -105,7 +96,7 @@ public class Partida implements Serializable {
 			}
 		}
 	}
-	
+
 	public void comprobarAmarrillas () {
 		for (int i = 0; i < palabraSecreta.length(); i++) {
 			Letra letraUser = palabraUsuario.get(i);
@@ -123,33 +114,32 @@ public class Partida implements Serializable {
 			}
 		}
 	}
-	
+
 	public void imprimirPalabraUsuario () {
 		for(int i = 0;i < palabraSecreta.length(); i++ ) {
 			Letra letraUser = palabraUsuario.get(i);
 			switch (letraUser.estado) {
-				case VERDE :
-					System.out.print(FONDO_VERDE + NEGRO + palabraUsuario.get(i).getLetra() + RESET);
-					break;
-				
-				case AMARILLO:
-					System.out.print(FONDO_AMARILLO + NEGRO + palabraUsuario.get(i).getLetra() + RESET);
-					break;
-					
-				case NEGRO:
-					System.out.print(FONDO_NEGRO + BLANCO + palabraUsuario.get(i).getLetra() + RESET);
-					break;
+			case VERDE :
+				System.out.print(FONDO_VERDE + NEGRO + palabraUsuario.get(i).getLetra() + RESET);
+				break;
+
+			case AMARILLO:
+				System.out.print(FONDO_AMARILLO + NEGRO + palabraUsuario.get(i).getLetra() + RESET);
+				break;
+
+			case NEGRO:
+				System.out.print(FONDO_NEGRO + BLANCO + palabraUsuario.get(i).getLetra() + RESET);
+				break;
 			}
 		}
 	}
-	
-	
+
 	public void compararLetras () {
 		comprobarVerdes();
 		comprobarAmarrillas();
 		imprimirPalabraUsuario();
 	}
-	
+
 	//metodo que valida el intento, resta vida o carga nueva palabra
 	public boolean intento(String intento) {
 		intento = intento.toLowerCase();
@@ -164,7 +154,7 @@ public class Partida implements Serializable {
 			return true;
 		} else {
 			vidas--;
-			
+
 			System.out.println("\nVidas restantes: " + vidas);
 			System.out.println();
 			return false;
@@ -174,20 +164,20 @@ public class Partida implements Serializable {
 	public void jugar() {
 
 		Scanner sc = new Scanner(System.in);
-			if(palabraSecreta==null) {
-	        cargarPalabras();
-	        iniciarPartida();
-			}
+		if(palabraSecreta==null) {
+			cargarPalabras();
+			iniciarPartida();
+		}
 		while (vidas>0) {
 
 			System.out.print("Introduce la palabra o ('guardar' para salir) ");
 			String intento = sc.nextLine().toLowerCase();
 			//aqui habria que poner por si quiere guardar la partida
 			if (intento.equals("guardar")) {
-                guardarPartida();
-                System.out.println("Partida guardada. Volviendo al menú.");
-                return;
-            }
+				guardarPartida();
+				System.out.println("Partida guardada. Volviendo al menú.");
+				return;
+			}
 			if (intento.length() != 5) {
 				System.out.println("La palabra debe tener 5 letras.");
 				continue;
@@ -199,32 +189,27 @@ public class Partida implements Serializable {
 		System.out.println("Has perdido, puntuación final: "+puntuacionFinal);
 		System.out.println("La palabra era: " + palabraSecreta);
 		do {
-		System.out.println("Quieres guardar la puntuacion? 1. SI 2.NO");
-		try {
-		int guardar=sc.nextInt();
-		
-		if(guardar==1) {
-		System.out.println("Introduce tu nombre: ");
-		String nombre =sc.next();
-		Puntuacion.registrar(nombre, puntuacionFinal);
-		break;
-		}else if(guardar==2){
-			break;
-		}else {
-			System.out.println("Opción no válida");
-		}
-		}catch(InputMismatchException e) {
-			System.out.println("Caracter introducido inválido");
-			sc.next();
-		}
+			System.out.println("Quieres guardar la puntuacion? 1. SI 2.NO");
+			try {
+				int guardar=sc.nextInt();
+
+				if(guardar==1) {
+					System.out.println("Introduce tu nombre: ");
+					String nombre =sc.next();
+					Puntuacion.registrar(nombre, puntuacionFinal);
+					break;
+				}else if(guardar==2){
+					break;
+				}else {
+					System.out.println("Opción no válida");
+				}
+			}catch(InputMismatchException e) {
+				System.out.println("Caracter introducido inválido");
+				sc.next();
+			}
 		}while(true);
-			
-			
-				
-			
-			
-		
 	}
+	
 	//guardar partida
 	public void guardarPartida() {
 		ObjectOutputStream oos =null;
@@ -243,13 +228,14 @@ public class Partida implements Serializable {
 			}
 		}
 	}
+	
 	//cargarPArtida
 	public static Partida cargarPartida() {
 		ObjectInputStream ois =null;
 		try {
 			ois= new ObjectInputStream(new FileInputStream("src\\practica6\\partidaGuardada.dat"));
 			return (Partida)ois.readObject();
-			
+
 		}catch(IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}finally {
